@@ -97,3 +97,10 @@ An invisible alert node broke that structure and produced visual issues.
 Fixes #22769
 Closes #22793
 ```
+
+## Sources
+
+This documentation was obtained from:
+
+- https://github.com/odoo/documentation/blob/19.0/content/contributing/development/git_guidelines.rst
+- https://github.com/OCA/odoo-community.org/blob/master/website/Contribution/CONTRIBUTING.rst#git

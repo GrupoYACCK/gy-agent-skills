@@ -162,3 +162,10 @@ When asked to produce a commit message:
 1. Return only the commit message unless the user asks for explanation.
 2. If info is missing, ask only the minimum necessary clarifying questions.
 3. If user provides a draft, return a corrected Odoo-compliant version.
+
+## Sources
+
+This documentation was obtained from:
+
+- https://github.com/odoo/documentation/blob/19.0/content/contributing/development/git_guidelines.rst
+- https://github.com/OCA/odoo-community.org/blob/master/website/Contribution/CONTRIBUTING.rst#git
