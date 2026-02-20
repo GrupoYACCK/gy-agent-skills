@@ -1,6 +1,6 @@
 ---
 name: odoo-commit-message-guidelines
-description: "Draft, rewrite, and validate Odoo-style commit messages using [TAG] module: summary format, 50/80 length limits, imperative English, WHY-first body, and correct tag selection. Includes optional migration tagging ([MIG]) when the project workflow uses it."
+description: "Draft, rewrite, and validate Odoo-style commit messages using [TAG] module: summary format, 50/72 length limits, imperative English, WHY-first body, and correct tag selection. Includes optional migration tagging ([MIG]) when the project workflow (like OCA) uses it."
 ---
 
 # Odoo Commit Message Guidelines
@@ -37,7 +37,8 @@ Before drafting, collect:
 - change type and intent (bug fix, refactor, migration, etc.)
 - core rationale (WHY the change is needed)
 - notable implementation choices (only if relevant)
-- references (`task-*`, `Fixes #`, `Closes #`, `opw-*`) when available
+- references (`task-*`, `ticket-*`, `Fixes #`, `Closes #`, `opw-*`) when available
+- specific CI directives (e.g., `[NO CI]`) if mentioned by the user
 
 If required inputs are missing, ask only the minimum concise follow-up questions.
 
@@ -52,6 +53,7 @@ WHY the change is needed.
 WHAT changed and technical choices (only if useful).
 
 task-123
+ticket-12345
 Fixes #123
 Closes #456
 opw-789
@@ -60,8 +62,11 @@ opw-789
 Rules:
 
 - Commit message must be in English.
+- Header must start with a tag from `Tag Selection Rules` in this exact pattern: `[TAG]` (e.g., `[FIX]`, `[ADD]`).
+- The tag must be uppercase and enclosed in brackets; reject lowercase or malformed tags.
 - Keep header concise; target about 50 characters in the summary part.
-- Body must be multiline and wrapped to about 80 characters per line.
+- Body must be multiline and wrapped to 72 characters per line.
+- Body should use structured plain text (lists using `*` or `-`). Avoid advanced Markdown (like tables) since commit messages are read in terminals.
 - Use imperative present voice: `Fix`, `Remove`, `Add` (not `Fixes`, `Removes`).
 - Make the header meaningful; avoid generic summaries like `bugfix`.
 - Prioritize WHY over WHAT in the body.
@@ -69,7 +74,7 @@ Rules:
 Compatibility note:
 
 - Official Odoo documentation does not define `[MIG]` as a core tag.
-- If the repository workflow explicitly uses migration tags, `[MIG]` can be used.
+- `[MIG]` is the official standard for Odoo Community Association (OCA) repositories. If the repository workflow uses migration tags, `[MIG]` can be used.
 
 ## Tag Selection Rules
 
@@ -110,8 +115,8 @@ Decision guidance:
 2. Choose the module scope.
 3. Select the tag from the rule set above.
 4. Draft header: `[TAG] module: imperative summary`.
-5. Draft body with WHY first, then concise WHAT if needed.
-6. Add references at the end using canonical formats.
+5. Draft body with WHY first, then concise WHAT if needed (plain text, wrapped at 72 chars).
+6. Add references and CI directives at the end using canonical formats.
 7. Validate against checklist before returning.
 
 ## Validation Checklist
@@ -119,8 +124,11 @@ Decision guidance:
 Confirm all items:
 
 - Header follows `[TAG] module: summary`.
+- Header starts with exactly one valid tag from `Tag Selection Rules`.
+- Tag token is uppercase and bracketed (`[FIX]`, not `[fix]` or `FIX`).
 - Summary is concise and not truncated with ellipsis in PR UI.
-- Body lines are about 80 characters max.
+- Body lines are wrapped at max 72 characters.
+- Body formatting avoids advanced Markdown, using simple plain text.
 - Rationale (WHY) is explicit.
 - Verb tense is imperative present.
 - Tag matches change intent.
@@ -141,6 +149,17 @@ An invisible alert node broke that structure and produced visual issues.
 
 Fixes #22769
 Closes #22793
+```
+
+```text
+[FIX] various: resolve rounding issues in currency conversions
+
+Address inconsistent decimal rounding behavior across multiple reporting
+and accounting modules. Instead of allowing components to do ad-hoc
+rounding, enforce standard decimal precision in the core tools.
+
+ticket-10928
+[NO CI]
 ```
 
 ```text
@@ -177,6 +196,9 @@ When asked to produce a commit message:
 1. Return only the raw commit message (no code fences) unless the user asks for explanation.
 2. If info is missing, ask only the minimum necessary clarifying questions.
 3. If user provides a draft, return a corrected Odoo-compliant version.
+4. Be strict: if the header does not begin with one uppercase bracketed tag from `Tag Selection Rules`, rewrite it before returning.
+5. For IDE Source Control usage, return a ready-to-use commit message suggestion that can be inserted directly in the Source Control commit box (no preamble, no labels, no markdown).
+6. **Execution Offer**: After providing the generated commit message, **proactively offer to execute the commit** using `git commit -m "..." -m "..."`. Always ask for explicit user confirmation before running the `git commit` command. Do not execute the commit automatically.
 
 ## Usage Examples
 
@@ -190,6 +212,7 @@ When asked to produce a commit message:
 2. Draft concise header in imperative form.
 3. Explain WHY first in body, then concise WHAT.
 4. Append `task-9123` as reference.
+5. Suggest the commit message and ask: *"Would you like me to execute this commit for you?"*
 
 ### Scenario 2: Rewrite an existing draft
 
@@ -200,6 +223,7 @@ When asked to produce a commit message:
 1. Reject generic summary and missing rationale.
 2. Ask minimum questions if context is missing (what bug, why needed).
 3. Return corrected message in Odoo format.
+4. Offer to execute the commit if the user is satisfied.
 
 ### Scenario 3: Validate tag choice
 
@@ -210,4 +234,5 @@ When asked to produce a commit message:
 1. Prefer `[MIG]` for migration intent.
 2. Recommend splitting migration and bug fix into separate commits when possible.
 3. Provide one valid commit message for each resulting commit if requested.
+4. Offer to stage and execute both commits sequentially.
 
