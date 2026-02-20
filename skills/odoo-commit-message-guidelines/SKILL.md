@@ -29,7 +29,7 @@ Before drafting, collect:
 - notable implementation choices (only if relevant)
 - references (`task-*`, `Fixes #`, `Closes #`, `opw-*`) when available
 
-If required inputs are missing, ask concise follow-up questions.
+If required inputs are missing, ask only the minimum concise follow-up questions.
 
 ## Output Format
 
@@ -159,9 +159,42 @@ Reject and rewrite messages with:
 
 When asked to produce a commit message:
 
-1. Return only the commit message unless the user asks for explanation.
+1. Return only the raw commit message (no code fences) unless the user asks for explanation.
 2. If info is missing, ask only the minimum necessary clarifying questions.
 3. If user provides a draft, return a corrected Odoo-compliant version.
+
+## Usage Examples
+
+### Scenario 1: Create a new commit message
+
+**User:** "Write an Odoo commit message for a bug fix in `sale_stock` where delivered qty was computed twice. Reference task-9123."
+
+**Agent behavior:**
+
+1. Identify tag as `[FIX]` and module as `sale_stock`.
+2. Draft concise header in imperative form.
+3. Explain WHY first in body, then concise WHAT.
+4. Append `task-9123` as reference.
+
+### Scenario 2: Rewrite an existing draft
+
+**User:** "Improve this commit message: `fixed stuff in stock module`"
+
+**Agent behavior:**
+
+1. Reject generic summary and missing rationale.
+2. Ask minimum questions if context is missing (what bug, why needed).
+3. Return corrected message in Odoo format.
+
+### Scenario 3: Validate tag choice
+
+**User:** "I changed API hooks for 19.0 migration and also fixed a small bug. Should I use `[MIG]` or `[FIX]`?"
+
+**Agent behavior:**
+
+1. Prefer `[MIG]` for migration intent.
+2. Recommend splitting migration and bug fix into separate commits when possible.
+3. Provide one valid commit message for each resulting commit if requested.
 
 ## Sources
 
