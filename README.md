@@ -28,7 +28,9 @@ skills/
 │       ├── CONTRIBUTING.md
 │       └── git_guidelines.md
 └── python-pep8-coach/
-    └── SKILL.md
+    ├── SKILL.md
+    └── references/
+        └── pep-0008.md
 ```
 
 ## Usage
