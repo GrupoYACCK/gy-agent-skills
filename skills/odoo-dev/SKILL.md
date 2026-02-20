@@ -14,6 +14,36 @@ You strictly adhere to both the official **Odoo Coding Guidelines** and the **OC
 When performing tasks, always align your code and suggestions with the standards detailed in the following local reference files:
 - `references/coding_guidelines.md` (Odoo Core Guidelines)
 - `references/CONTRIBUTING.md` (OCA Guidelines)
+- `references/backend/module.rst` (module structure and backend conventions)
+- `references/backend/orm.rst` (ORM API and model behavior)
+- `references/backend/security.rst` (groups, ACLs, rules, security patterns)
+- `references/backend/reports.rst` (reporting and report integration)
+- `references/backend/testing.rst` (testing approach and patterns)
+- `references/backend/http.rst` (controllers and HTTP endpoints)
+- `references/backend/actions.rst` (server actions and UI actions)
+- `references/backend/data.rst` (data files and loading behavior)
+- `references/backend/performance.rst` (performance and scalability guidance)
+- `references/backend/mixins.rst` (mixin design and reuse)
+- `references/upgrades/upgrade_scripts.rst` (migration scripts)
+- `references/upgrades/upgrade_utils.rst` (upgrade utilities)
+
+### Reference Loading Strategy
+- Do not load the full references tree by default.
+- Read only the specific file(s) needed for the current task.
+- Prefer this order when in doubt: `coding_guidelines.md` + `CONTRIBUTING.md` first, then the relevant `references/backend/*` or `references/upgrades/*` file.
+
+### Reference Routing (What to Read When)
+- **Need module architecture or backend conventions:** read `references/backend/module.rst`.
+- **Need model logic, fields, domains, recordsets, or ORM API behavior:** read `references/backend/orm.rst`.
+- **Need ACLs, groups, record rules, or secure design checks:** read `references/backend/security.rst`.
+- **Need reports/QWeb/report models:** read `references/backend/reports.rst`.
+- **Need tests and validation patterns:** read `references/backend/testing.rst`.
+- **Need controllers/routes/request handling:** read `references/backend/http.rst`.
+- **Need actions/window actions/server actions:** read `references/backend/actions.rst`.
+- **Need data/demo XML/CSV loading behavior:** read `references/backend/data.rst`.
+- **Need performance optimization guidance:** read `references/backend/performance.rst`.
+- **Need reusable behavior via mixins:** read `references/backend/mixins.rst`.
+- **Need migration strategy or upgrade scripts/utils:** read `references/upgrades/upgrade_scripts.rst` and `references/upgrades/upgrade_utils.rst`.
 
 ## Core Principles & Coding Standards
 
@@ -60,3 +90,4 @@ When performing tasks, always align your code and suggestions with the standards
 - **Module & Code Generation:** ALWAYS scaffold robust, boilerplate-free files following the OCA complete structure. Provide cleanly formatted Python and XML snippets. When the user asks to create a new module, you can leverage the local scaffold script at `scripts/scaffold.py`. You can run it in interactive mode (`python3 scripts/scaffold.py`) or with optional positional arguments in this exact order: `odoo_version module_name location template_choice`. Supported template values: `1`, `2`, `basic_module`, `advanced_module`. Use `--help` to show CLI usage.
 - **Code Reviewer:** Meticulously detect deviations from the guidelines. Reject raw string formatting in SQL, unjustified `cr.commit()`, or `position="replace"`. Point out exactly how the code should be rewritten to match Odoo/OCA standards.
 - **Advising:** Respectfully correct the user if they request a non-standard implementation, outlining the "Odoo/OCA Standard" way of achieving the requirement.
+- **Reference-first troubleshooting:** when uncertain, consult the relevant developer reference page before proposing non-standard workarounds.
