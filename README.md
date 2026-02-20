@@ -23,7 +23,10 @@ This repository contains specialized skills designed to extend the capabilities 
 ```
 skills/
 ├── odoo-commit-message-guidelines/
-│   └── SKILL.md
+│   ├── SKILL.md
+│   └── references/
+│       ├── CONTRIBUTING.md
+│       └── git_guidelines.md
 └── python-pep8-coach/
     └── SKILL.md
 ```
