@@ -10,7 +10,7 @@ go a long way towards making your commits more helpful:
 - Be sure to define both the user.email and user.name in your local git
   config
 
-  ``` text
+  ```text
   git config --global <var> <value>
   ```
 
@@ -23,7 +23,7 @@ Commit message has four parts: tag, module, short description and full
 description. Try to follow the preferred structure for your commit
 messages
 
-``` text
+```text
 [TAG] module: describe your change in a short sentence (ideally < 50 chars)
 
 Long version of the change description, including the rationale for the change,
@@ -46,27 +46,27 @@ opw-123 (related to ticket)
 
 Tags are used to prefix your commit. They should be one of the following
 
-- **\[FIX\]** for bug fixes: mostly used in stable version but also
+- **[FIX]** for bug fixes: mostly used in stable version but also
   valid if you are fixing a recent bug in development version;
-- **\[REF\]** for refactoring: when a feature is heavily rewritten;
-- **\[ADD\]** for adding new modules;
-- **\[REM\]** for removing resources: removing dead code, removing
-  views, removing modules, \...;
-- **\[REV\]** for reverting commits: if a commit causes issues or is not
+- **[REF]** for refactoring: when a feature is heavily rewritten;
+- **[ADD]** for adding new modules;
+- **[REM]** for removing resources: removing dead code, removing
+  views, removing modules, ...;
+- **[REV]** for reverting commits: if a commit causes issues or is not
   wanted reverting it is done using this tag;
-- **\[MOV\]** for moving files: use git move and do not change content
+- **[MOV]** for moving files: use git move and do not change content
   of moved file otherwise Git may loose track and history of the file;
   also used when moving code from one file to another;
-- **\[REL\]** for release commits: new major or minor stable versions;
-- **\[IMP\]** for improvements: most of the changes done in development
+- **[REL]** for release commits: new major or minor stable versions;
+- **[IMP]** for improvements: most of the changes done in development
   version are incremental improvements not related to another tag;
-- **\[MERGE\]** for merge commits: used in forward port of bug fixes but
+- **[MERGE]** for merge commits: used in forward port of bug fixes but
   also as main commit for feature involving several separated commits;
-- **\[CLA\]** for signing the Odoo Individual Contributor License;
-- **\[I18N\]** for changes in translation files;
-- **\[PERF\]** for performance patches;
-- **\[CLN\]** for code cleanup;
-- **\[LINT\]** for linting passes;
+- **[CLA]** for signing the Odoo Individual Contributor License;
+- **[I18N]** for changes in translation files;
+- **[PERF]** for performance patches;
+- **[CLN]** for code cleanup;
+- **[LINT]** for linting passes;
 
 After tag comes the modified module name. Use the technical name as
 functional name may change with time. If several modules are modified,
@@ -78,7 +78,7 @@ same commit. Understanding module history may become difficult.
 
 After tag and module name comes a meaningful commit message header. It
 should be self explanatory and include the reason behind the change. Do
-not use single words like \"bugfix\" or \"improvements\". Try to limit
+not use single words like "bugfix" or "improvements". Try to limit
 the header length to about 50 characters for readability.
 
 Commit message header should make a valid sentence once concatenated
@@ -90,7 +90,7 @@ correct as it makes a valid sentence
 # Commit message full description
 
 In the message description specify the part of the code impacted by your
-changes (module name, lib, transversal object, \...) and a description
+changes (module name, lib, transversal object, ...) and a description
 of the changes.
 
 First explain WHY you are modifying code. What is important if someone
@@ -99,15 +99,15 @@ it. It is the purpose of the change.
 
 What you did can be found in the commit itself. If there was some
 technical choices involved it is a good idea to explain it also in the
-commit message after the why. For Odoo R&D developers \"PO team asked me
-to do it\" is not a valid why, by the way.
+commit message after the why. For Odoo R&D developers "PO team asked me
+to do it" is not a valid why, by the way.
 
 Please avoid commits which simultaneously impact multiple modules. Try
 to split into different commits where impacted modules are different. It
 will be helpful if we need to revert changes in a given module
 separately.
 
-Don\'t hesitate to be a bit verbose. Most people will only see your
+Don't hesitate to be a bit verbose. Most people will only see your
 commit message and judge everything you did in your life just based on
 those few sentences. No pressure at all.
 
@@ -122,7 +122,7 @@ specifications please consider making them clear before continuing.**
 
 Finally here are some examples of correct commit messages :
 
-``` text
+```text
 [REF] models: use `parent_path` to implement parent_store
 
  This replaces the former modified preorder tree traversal (MPTT) with the

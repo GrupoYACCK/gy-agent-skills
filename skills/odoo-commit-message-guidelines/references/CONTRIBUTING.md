@@ -7,33 +7,33 @@ title: OCA Guidelines (2018/08/24)
 ## Commit message
 
 Write a **short** commit summary without prefixing it. It should not be
-longer than 50 characters: [This is a commit message]{.title-ref}
+longer than 50 characters: This is a commit message
 
 Then, in the message itself, specify the part of the code impacted by
-your changes (module name, lib, transversal object, \...) and a
+your changes (module name, lib, transversal object, ...) and a
 description of the changes. This part should be multiple lines no longer
 than 80 characters.
 
 - Commit messages are in English
 - Merge proposals should follow the same rules as the title of the
-  propsal is the first line of the merge commit and the description
+  proposal is the first line of the merge commit and the description
   corresponds to commit description.
 - Always put meaningful commit messages: commit messages should be self
   explanatory (long enough) including the name of the module that has
   been changed and the reason behind that change. Do not use single
-  words like \"bugfix\" or \"improvements\".
+  words like "bugfix" or "improvements".
 - Avoid commits which simultaneously impact lots of modules. Try to
   split into different commits where impacted modules are different.
   This is helpful if we need to revert changes on a module separately.
 - Only make a single commit per logical change set. Do not add commits
-  such as \"Fix pep8\", \"Code review\" or \"Add unittest\" if they fix
+  such as "Fix pep8", "Code review" or "Add unittest" if they fix
   commits which are being proposed
 - Use present imperative (Fix formatting, Remove unused field) avoid
-  appending \'s\' to verbs: Fixes, Removes
+  appending 's' to verbs: Fixes, Removes
 - Use tags as [listed in the Odoo
   Guidelines](https://www.odoo.com/documentation/16.0/contributing/development/git_guidelines.html#tag-and-module-name)
   with the following extensions:
-  - **\[MIG\]** for migrating a module
+  - **[MIG]** for migrating a module
 
 ``` 
 [FIX] website: remove unused alert div
@@ -78,11 +78,11 @@ purposes:
 - Allow the responsibles to look at every devs and keep the interested
   people informed of what has been done
 - Prevent addon incompatibilities when/if possible
-- The rationale for peer review has its equivalent in Linus\'s law,
-  often phrased: \"Given enough eyeballs, all bugs are shallow\"
+- The rationale for peer review has its equivalent in Linus's law,
+  often phrased: "Given enough eyeballs, all bugs are shallow"
 
-Meaning \"If there are enough reviewers, all problems are easy to
-solve\". Eric S. Raymond has written influentially about peer review in
+Meaning "If there are enough reviewers, all problems are easy to
+solve". Eric S. Raymond has written influentially about peer review in
 software development:
 <http://en.wikipedia.org/wiki/Software_peer_review>.
 
@@ -125,13 +125,13 @@ Further reading:
   understand their purpose and, if applicable, contain a demo in order
   to allow people to run and test the code
 - Choose the review tag (comment, approve, rejected, needs
-  information,\...) and don\'t forget to add a type of review to let
+  information, ...) and don't forget to add a type of review to let
   people know:
   - Code review: means you look at the code
   - Test: means you tested it functionally speaking
 
 While making the merge, please respect the author using the
-[\--author]{.title-ref} option when committing. The author is found
+`--author` option when committing. The author is found
 using the git log command. Use the commit message provided by the
 contributor if any.
 
@@ -139,7 +139,7 @@ contributor if any.
 
 - The origin/reason for the patch/dev is not documented very well
 - No adapted / convenient description written in the
-  [\_\_manifest\_\_.py]{.title-ref} file for the module
+  `__manifest__.py` file for the module
 - Tests or scenario are not all green and/or not adapted
 - Having tests is very much encouraged
 - Issues with license, copyright, authorship
