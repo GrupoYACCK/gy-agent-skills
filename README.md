@@ -4,6 +4,14 @@ This repository contains specialized skills designed to extend the capabilities 
 
 ## Available Skills
 
+### [Odoo Dev](skills/odoo-dev/SKILL.md)
+**Description:** Senior Odoo developer skill focused on Odoo/OCA standards, secure code patterns, and module scaffolding workflows.
+**Key Features:**
+- Enforces Odoo and OCA coding/contribution guidelines from local references.
+- Reviews code for common framework risks (SQL injection patterns, unsafe commits, fragile XML inheritance).
+- Supports module scaffolding with `scripts/scaffold.py` in interactive mode or positional-argument mode.
+- Includes script usage documentation in `skills/odoo-dev/scripts/README.md`.
+
 ### [Odoo Commit Message Guidelines](skills/odoo-commit-message-guidelines/SKILL.md)
 **Description:** comprehensive guide for drafting, rewriting, and validating Odoo-style commit messages.
 **Key Features:**
@@ -22,6 +30,13 @@ This repository contains specialized skills designed to extend the capabilities 
 
 ```
 skills/
+├── odoo-dev/
+│   ├── SKILL.md
+│   ├── assets/
+│   ├── references/
+│   └── scripts/
+│       ├── scaffold.py
+│       └── README.md
 ├── odoo-commit-message-guidelines/
 │   ├── SKILL.md
 │   └── references/
