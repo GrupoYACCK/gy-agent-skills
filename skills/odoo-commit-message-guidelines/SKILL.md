@@ -1,6 +1,6 @@
 ---
 name: odoo-commit-message-guidelines
-description: "Draft, rewrite, and validate Odoo-style commit messages using [TAG] module: summary format, 50/80 length limits, imperative English, WHY-first body, and correct tag selection including [MIG]. Use when a user asks to write or fix a commit message for Odoo repositories."
+description: "Draft, rewrite, and validate Odoo-style commit messages using [TAG] module: summary format, 50/80 length limits, imperative English, WHY-first body, and correct tag selection. Includes optional migration tagging ([MIG]) when the project workflow uses it."
 ---
 
 # Odoo Commit Message Guidelines
@@ -10,6 +10,16 @@ description: "Draft, rewrite, and validate Odoo-style commit messages using [TAG
 Use this skill to produce high-quality Odoo commit messages that are consistent,
 reviewable, and easy to revert.
 
+## Local References
+
+This skill includes reference material in:
+
+- `references/git_guidelines.md` (official Odoo commit message conventions)
+- `references/CONTRIBUTING.md` (OCA contribution and commit message extensions)
+
+Use these files as source context when user requests stricter validation,
+edge-case tagging decisions, or policy justification.
+
 ## When To Use
 
 Use this skill when the user asks to:
@@ -17,7 +27,7 @@ Use this skill when the user asks to:
 - write a new commit message for Odoo code
 - rewrite or improve an existing commit message
 - validate whether a commit message follows Odoo rules
-- choose the correct Odoo tag, including migration cases (`[MIG]`)
+- choose the correct Odoo tag
 
 ## Required Inputs
 
@@ -56,6 +66,11 @@ Rules:
 - Make the header meaningful; avoid generic summaries like `bugfix`.
 - Prioritize WHY over WHAT in the body.
 
+Compatibility note:
+
+- Official Odoo documentation does not define `[MIG]` as a core tag.
+- If the repository workflow explicitly uses migration tags, `[MIG]` can be used.
+
 ## Tag Selection Rules
 
 Choose exactly one main tag for the commit:
@@ -74,7 +89,7 @@ Choose exactly one main tag for the commit:
 - `[PERF]` performance improvement
 - `[CLN]` cleanup
 - `[LINT]` linting pass
-- `[MIG]` module migration
+- `[MIG]` module migration (only when the project convention supports it)
 
 Decision guidance:
 
@@ -120,7 +135,7 @@ If any check fails, rewrite the message before returning.
 ```text
 [FIX] website: remove unused alert div
 
-Fix look of input-group-btn.
+Fix the look of input-group-btn.
 Bootstrap requires input-group-btn to be the first or last child.
 An invisible alert node broke that structure and produced visual issues.
 
@@ -196,9 +211,3 @@ When asked to produce a commit message:
 2. Recommend splitting migration and bug fix into separate commits when possible.
 3. Provide one valid commit message for each resulting commit if requested.
 
-## Sources
-
-This documentation was obtained from:
-
-- https://github.com/odoo/documentation/blob/19.0/content/contributing/development/git_guidelines.rst
-- https://github.com/OCA/odoo-community.org/blob/master/website/Contribution/CONTRIBUTING.rst#git
