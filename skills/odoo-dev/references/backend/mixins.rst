@@ -205,24 +205,14 @@ to a field, simple set the tracking attribute to True.
 
 .. example::
 
-    Let's track changes on the name and responsible of our business trips:
+    Adding tracking to the BusinessTrip model — set ``tracking=True`` on fields:
 
     .. code-block:: python
 
-        class BusinessTrip(models.Model):
-            _name = 'business.trip'
-            _inherit = ['mail.thread']
-            _description = 'Business Trip'
-
             name = fields.Char(tracking=True)
-            partner_id = fields.Many2one('res.partner', 'Responsible',
-                                         tracking=True)
-            guest_ids = fields.Many2many('res.partner', 'Participants')
+            partner_id = fields.Many2one('res.partner', 'Responsible', tracking=True)
 
-    From now on, every change to a trip's name or responsible will log a note
-    on the record. The ``name`` field will be displayed in the notification as
-    well to give more context about the notification (even if the name did not
-    change).
+    Every change to these fields will log a note on the record's chatter.
 
 Subtypes
 ~~~~~~~~
@@ -291,34 +281,18 @@ can override the ``_track_subtype()`` function:
         </record>
 
 
-    Then, we need to override the ``track_subtype()`` function. This function
-    is called by the tracking system to know which subtype should be used depending
-    on the change currently being applied. In our case, we want to use our shiny new
-    subtype when the ``state`` field changes from *draft* to *confirmed*:
+    Then, override ``_track_subtype()`` to select the subtype based on the change:
 
     .. code-block:: python
 
-        class BusinessTrip(models.Model):
-            _name = 'business.trip'
-            _inherit = ['mail.thread']
-            _description = 'Business Trip'
-
-            name = fields.Char(tracking=True)
-            partner_id = fields.Many2one('res.partner', 'Responsible',
-                                         tracking=True)
-            guest_ids = fields.Many2many('res.partner', 'Participants')
             state = fields.Selection([('draft', 'New'), ('confirmed', 'Confirmed')],
                                      tracking=True)
 
             def _track_subtype(self, init_values):
-                # init_values contains the modified fields' values before the changes
-                #
-                # the applied values can be accessed on the record as they are already
-                # in cache
                 self.ensure_one()
                 if 'state' in init_values and self.state == 'confirmed':
                     return self.env.ref('my_module.mt_state_change')
-                return super(BusinessTrip, self)._track_subtype(init_values)
+                return super()._track_subtype(init_values)
 
 Customizing notifications
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -425,49 +399,29 @@ The urls in the actions list can be generated automatically by calling the
 
 .. example::
 
-    Let's add a custom button to the Business Trip state change notification;
-    this button will reset the state to Draft and will be only visible to a member
-    of the (imaginary) group Travel Manager (``business.group_trip_manager``)
+    Adding a custom cancel button visible only to Trip Managers in notifications:
 
     .. code-block:: python
-
-        class BusinessTrip(models.Model):
-            _name = 'business.trip'
-            _inherit = ['mail.thread', 'mail.alias.mixin']
-            _description = 'Business Trip'
-
-            # Pevious code goes here
 
             def action_cancel(self):
                 self.write({'state': 'draft'})
 
             def _notify_get_groups(self, message, groups):
-                """ Handle Trip Manager recipients that can cancel the trip at the last
-                minute and kill all the fun. """
-                groups = super(BusinessTrip, self)._notify_get_groups(message, groups)
-
+                groups = super()._notify_get_groups(message, groups)
                 self.ensure_one()
                 if self.state == 'confirmed':
-                    app_action = self._notify_get_action_link('method',
-                                        method='action_cancel')
+                    app_action = self._notify_get_action_link('method', method='action_cancel')
                     trip_actions = [{'url': app_action, 'title': _('Cancel')}]
-
-                new_group = (
-                    'group_trip_manager',
-                    lambda partner: any(
-                        user.sudo().has_group('business.group_trip_manager')
-                        for user in partner.user_ids
-                    ),
-                    {'actions': trip_actions},
-                )
-
-                return [new_group] + groups
-
-
-    Note that that I could have defined my evaluation function outside of this
-    method and define a global function to do it instead of a lambda, but for
-    the sake of being more brief and less verbose in these documentation files
-    that can sometimes be boring, I choose the former instead of the latter.
+                    new_group = (
+                        'group_trip_manager',
+                        lambda partner: any(
+                            user.sudo().has_group('business.group_trip_manager')
+                            for user in partner.user_ids
+                        ),
+                        {'actions': trip_actions},
+                    )
+                    return [new_group] + groups
+                return groups
 
 Overriding defaults
 ~~~~~~~~~~~~~~~~~~~
@@ -612,41 +566,21 @@ you to make your alias easily configurable from the record's form view.
 
 .. example::
 
-    Let's add aliases on our business trip class to create expenses on the fly via
-    e-mail.
+    Adding aliases to create expenses via e-mail — only the new parts shown:
 
     .. code-block:: python
 
         class BusinessTrip(models.Model):
-            _name = 'business.trip'
             _inherit = ['mail.thread', 'mail.alias.mixin']
-            _description = 'Business Trip'
-
-            name = fields.Char(tracking=True)
-            partner_id = fields.Many2one('res.partner', 'Responsible',
-                                         tracking=True)
-            guest_ids = fields.Many2many('res.partner', 'Participants')
-            state = fields.Selection([('draft', 'New'), ('confirmed', 'Confirmed')],
-                                     tracking=True)
+            # ... previous fields ...
             expense_ids = fields.One2many('business.expense', 'trip_id', 'Expenses')
-            alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict",
-                                       required=True)
 
             def _get_alias_model_name(self, vals):
-            """ Specify the model that will get created when the alias receives a message """
                 return 'business.expense'
 
             def _get_alias_values(self):
-            """ Specify some default values that will be set in the alias at its creation """
-                values = super(BusinessTrip, self)._get_alias_values()
-                # alias_defaults holds a dictionary that will be written
-                # to all records created by this alias
-                #
-                # in this case, we want all expense records sent to a trip alias
-                # to be linked to the corresponding business trip
+                values = super()._get_alias_values()
                 values['alias_defaults'] = {'trip_id': self.id}
-                # we only want followers of the trip to be able to post expenses
-                # by default
                 values['alias_contact'] = 'followers'
                 return values
 
@@ -660,67 +594,20 @@ you to make your alias easily configurable from the record's form view.
             trip_id = fields.Many2one('business.trip', 'Business Trip')
             partner_id = fields.Many2one('res.partner', 'Created by')
 
-    We would like our alias to be easily configurable from the form view of our
-    business trips, so let's add the following to our form view:
-
-    .. code-block:: xml
-
-        <page string="Emails">
-            <group name="group_alias">
-                <label for="alias_name" string="Email Alias"/>
-                <div name="alias_def">
-                    <!-- display a link while in view mode and a configurable field
-                    while in edit mode -->
-                    <field name="alias_id" class="oe_read_only oe_inline"
-                            string="Email Alias" required="0"/>
-                    <div class="oe_edit_only oe_inline" name="edit_alias"
-                         style="display: inline;" >
-                        <field name="alias_name" class="oe_inline"/>
-                        @
-                        <field name="alias_domain" class="oe_inline" readonly="1"/>
-                    </div>
-                </div>
-                <field name="alias_contact" class="oe_inline"
-                        string="Accept Emails From"/>
-            </group>
-        </page>
-
-    Now we can change the alias address directly from the form view and change
-    who can send e-mails to the alias.
-
-    We can then override ``message_new()`` on our expense model to fetch the values
-    from our email when the expense will be created:
+    Override ``message_new()`` to extract values from email:
 
     .. code-block:: python
 
-        class BusinessExpense(models.Model):
-            # Previous code goes here
-            # ...
-
             def message_new(self, msg, custom_values=None):
-                """ Override to set values according to the email.
-
-                In this simple example, we simply use the email title as the name
-                of the expense, try to find a partner with this email address and
-                do a regex match to find the amount of the expense."""
-                name = msg_dict.get('subject', 'New Expense')
-                # Match the last occurrence of a float in the string
-                # Example: '50.3 bar 34.5' becomes '34.5'. This is potentially the price
-                # to encode on the expense. If not, take 1.0 instead
-                amount_pattern = '(\d+(\.\d*)?|\.\d+)'
+                name = msg.get('subject', 'New Expense')
+                amount_pattern = r'(\d+(\.\d*)?|\.\d+)'
                 expense_price = re.findall(amount_pattern, name)
-                price = expense_price and float(expense_price[-1][0]) or 1.0
-                # find the partner by looking for it's email
-                partner = self.env['res.partner'].search([('email', 'ilike', email_address)],
-                                                         limit=1)
-                defaults = {
-                    'name': name,
-                    'amount': price,
-                    'partner_id': partner.id
-                }
+                price = float(expense_price[-1][0]) if expense_price else 1.0
+                partner = self.env['res.partner'].search(
+                    [('email', 'ilike', msg.get('email_from'))], limit=1)
+                defaults = {'name': name, 'amount': price, 'partner_id': partner.id}
                 defaults.update(custom_values or {})
-                res = super(BusinessExpense, self).message_new(msg, custom_values=defaults)
-                return res
+                return super().message_new(msg, custom_values=defaults)
 
 .. _reference/mixins/mail/activities:
 
@@ -741,39 +628,20 @@ widgets, respectively).
 
 .. example::
 
-    Organizing a business trip is a tedious process and tracking needed activities
-    like ordering plane tickets or a cab for the airport could be useful. To do so,
-    we will add the activities mixin on our model and display the next planned activities
-    in the message history of our trip.
+    Add ``mail.activity.mixin`` to the ``_inherit`` list and include ``activity_ids``
+    widget in the form view's chatter:
 
     .. code-block:: python
 
-        class BusinessTrip(models.Model):
-            _name = 'business.trip'
-            _inherit = ['mail.thread', 'mail.activity.mixin']
-            _description = 'Business Trip'
-
-            name = fields.Char()
-            # [...]
-
-    We modify the form view of our trips to display their next activities:
+        _inherit = ['mail.thread', 'mail.activity.mixin']
 
     .. code-block:: xml
 
-        <record id="business_trip_form" model="ir.ui.view">
-            <field name="name">business.trip.form</field>
-            <field name="model">business.trip</field>
-            <field name="arch" type="xml">
-                <form string="Business Trip">
-                    <!-- Your usual form view goes here -->
-                    <chatter>
-                        <field name="message_follower_ids" widget="mail_followers"/>
-                        <field name="activity_ids" widget="mail_activity"/>
-                        <field name="message_ids" widget="mail_thread"/>
-                    </chatter>
-                </form>
-            </field>
-        </record>
+        <chatter>
+            <field name="message_follower_ids" widget="mail_followers"/>
+            <field name="activity_ids" widget="mail_activity"/>
+            <field name="message_ids" widget="mail_thread"/>
+        </chatter>
 
 You can find concrete examples of integration in the following models:
 

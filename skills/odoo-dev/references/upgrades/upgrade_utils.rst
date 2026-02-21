@@ -55,8 +55,7 @@ Now, the helper functions are available to be called through ``util``.
 Util functions
 ==============
 
-Upgrade utils provides many useful functions to ease the upgrade process. Here, we describe some
-of the most useful ones. Refer to the `util folder
+Upgrade utils provides many useful functions to ease the upgrade process. Refer to the `util folder
 <https://github.com/odoo/upgrade-util/tree/master/src/util>`_ for the comprehensive declaration of
 helper functions.
 
@@ -65,56 +64,10 @@ helper functions.
    The :attr:`cr` parameter in util functions always refers to the database cursor. Pass the one
    received as a parameter in :meth:`migrate`. Not all functions need this parameter.
 
-.. currentmodule:: odoo.upgrade.util
-
-Modules
--------
-
-.. automodule:: odoo.upgrade.util.modules
-   :members:
-
-Models
-------
-
-.. automodule:: odoo.upgrade.util.models
-   :members:
-
-Fields
-------
-
-.. automodule:: odoo.upgrade.util.fields
-   :members:
-
-Records
--------
-
-.. automodule:: odoo.upgrade.util.records
-   :members:
-
-ORM
----
-
-.. automodule:: odoo.upgrade.util.orm
-   :members:
-
-.. automodule:: odoo.upgrade.util.domains
-   :members:
-
-SQL
----
-
-.. automodule:: odoo.upgrade.util.pg
-   :members:
-
-Misc
-----
-
-.. automodule:: odoo.upgrade.util.misc
-   :members:
-
+Available modules: ``util.modules``, ``util.models``, ``util.fields``, ``util.records``,
+``util.orm``, ``util.domains``, ``util.pg`` (SQL), ``util.misc``.
 
 Testing upgrade scripts
 =======================
 
-.. automodule:: odoo.upgrade.testing
-   :members:
+Use ``odoo.upgrade.testing`` for base TestCase classes.

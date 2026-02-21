@@ -301,15 +301,6 @@ Check :ref:`SQL execution <reference/orm/sql>` for detailed usage.
 This is very important, so please be careful also when refactoring, and most
 importantly do not copy these patterns!
 
-Here is a memorable example to help you remember what the issue is about (but
-do not copy the code there). Before continuing, please be sure to read the
-online documentation of pyscopg2 to learn of to use it properly:
-
-- `The problem with query parameters <http://initd.org/psycopg/docs/usage.html#the-problem-with-the-query-parameters>`_
-- `How to pass parameters with psycopg2 <http://initd.org/psycopg/docs/usage.html#passing-parameters-to-sql-queries>`_
-- `Advanced parameter types <http://initd.org/psycopg/docs/usage.html#adaptation-of-python-values-to-sql-types>`_
-- `Psycopg documentation <https://www.psycopg.org/docs/sql.html>`_
-
 Building the domains
 --------------------
 
@@ -337,62 +328,21 @@ of domains.
 Unescaped field content
 -----------------------
 
-When rendering content using JavaScript and XML, one may be tempted to use
-a ``t-raw`` to display rich-text content. This should be avoided as a frequent
-`XSS <https://en.wikipedia.org/wiki/Cross-site_scripting>`_ vector.
-
-It is very hard to control the integrity of the data from the computation until
-the final integration in the browser DOM. A ``t-raw`` that is correctly escaped
-at the time of introduction may no longer be safe at the next bugfix or
-refactoring.
-
-.. code-block:: javascript
-
-    QWeb.render('insecure_template', {
-        info_message: "You have an <strong>important</strong> notification",
-    })
+When rendering content using JavaScript and XML, never use ``t-raw`` with user-provided data
+(XSS vector). Use ``t-esc`` instead and pass data as separate variables:
 
 .. code-block:: xml
 
+    <!-- BAD: t-raw with concatenated user data -->
     <div t-name="insecure_template">
-        <div id="information-bar"><t t-raw="info_message" /></div>
+        <div t-raw="info_message" />
     </div>
 
-The above code may feel safe as the message content is controlled but is a bad
-practice that may lead to unexpected security vulnerabilities once this code
-evolves in the future.
-
-.. code-block:: javascript
-
-    // XSS possible with unescaped user provided content !
-    QWeb.render('insecure_template', {
-        info_message: "You have an <strong>important</strong> notification on " \
-            + "the product <strong>" + product.name + "</strong>",
-    })
-
-While formatting the template differently would prevent such vulnerabilities.
-
-.. code-block:: javascript
-
-    QWeb.render('secure_template', {
-        message: "You have an important notification on the product:",
-        subject: product.name
-    })
-
-.. code-block:: xml
-
+    <!-- GOOD: separate structure from user content -->
     <div t-name="secure_template">
-        <div id="information-bar">
-            <div class="info"><t t-esc="message" /></div>
-            <div class="subject"><t t-esc="subject" /></div>
-        </div>
+        <div class="info"><t t-esc="message" /></div>
+        <div class="subject"><t t-esc="subject" /></div>
     </div>
-
-.. code-block:: css
-
-    .subject {
-        font-weight: bold;
-    }
 
 Creating safe content using :class:`~markupsafe.Markup`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -413,67 +363,27 @@ user-provided (and thus potentially unsafe) content:
     >>> Markup('<em>Hello</em> %s') % '<foo>'
     Markup('<em>Hello</em> &lt;foo&gt;')
 
-though it is a very good thing, note that the effects can be odd at times:
-
-.. code-block:: pycon
-
-    >>> Markup('<a>').replace('>', 'x')
-    Markup('<a>')
-    >>> Markup('<a>').replace(Markup('>'), 'x')
-    Markup('<ax')
-    >>> Markup('<a&gt;').replace('>', 'x')
-    Markup('<ax')
-    >>> Markup('<a&gt;').replace('>', '&')
-    Markup('<a&amp;')
-
 .. tip:: Most of the content-safe APIs actually return a
          :class:`~markupsafe.Markup` with all that implies.
 
-The :class:`~markupsafe.escape` method (and its
-alias :class:`~odoo.tools.misc.html_escape`) turns a `str` into
-a :class:`~markupsafe.Markup` and escapes its content. It will not escape the
-content of a :class:`~markupsafe.Markup` object.
+Key patterns:
 
 .. code-block:: python
 
-    def get_name(self, to_html=False):
-        if to_html:
-            return Markup("<strong>%s</strong>") % self.name  # escape the name
-        else:
-            return self.name
+    # Escaping user content into safe HTML
+    Markup("<strong>%s</strong>") % self.name
 
-    >>> record.name = "<R&D>"
-    >>> escape(record.get_name())
-    Markup("&lt;R&amp;D&gt;")
-    >>> escape(record.get_name(True))
-    Markup("<strong>&lt;R&amp;D&gt;</strong>")  # HTML is kept
+    # Combining structure + content
+    Markup("<p>") + "Hello <R&D>" + Markup("</p>")
+    # => Markup('<p>Hello &lt;R&amp;D&gt;</p>')
 
-When generating HTML code, it is important to separate the structure (tags) from
-the content (text).
+    # BAD patterns
+    Markup(f"<p>Foo {self.bar}</p>")  # bar inserted before escaping
+    Markup("<p>Foo %</p>" % bar)       # bar not escaped
 
-.. code-block:: pycon
-
-    >>> Markup("<p>") + "Hello <R&D>" + Markup("</p>")
-    Markup('<p>Hello &lt;R&amp;D&gt;</p>')
-    >>> Markup("%s <br/> %s") % ("<R&D>", Markup("<p>Hello</p>"))
-    Markup('&lt;R&amp;D&gt; <br/> <p>Hello</p>')
-    >>> escape("<R&D>")
-    Markup('&lt;R&amp;D&gt;')
-    >>> _("List of Tasks on project %s: %s",
-    ...     project.name,
-    ...     Markup("<ul>%s</ul>") % Markup().join(Markup("<li>%s</li>") % t.name for t in project.task_ids)
-    ... )
-    Markup('Liste de tâches pour le projet &lt;R&amp;D&gt;: <ul><li>First &lt;R&amp;D&gt; task</li></ul>')
-
-    >>> Markup("<p>Foo %</p>" % bar)  # bad, bar is not escaped
-    >>> Markup("<p>Foo %</p>") % bar  # good, bar is escaped if text and kept if markup
-
-    >>> link = Markup("<a>%s</a>") % self.name
-    >>> message = "Click %s" % link  # bad, message is text and Markup did nothing
-    >>> message = escape("Click %s") % link  # good, format two markup objects together
-
-    >>> Markup(f"<p>Foo {self.bar}</p>")  # bad, bar is inserted before escaping
-    >>> Markup("<p>Foo {bar}</p>").format(bar=self.bar)  # good, sorry no fstring
+    # GOOD patterns
+    Markup("<p>Foo {bar}</p>").format(bar=self.bar)  # escaped
+    Markup("<p>Foo %</p>") % bar                      # escaped
 
 When working with translations, it is especially important to separate the HTML
 from the text. The translation methods accepts a :class:`~markupsafe.Markup`

@@ -46,22 +46,13 @@ When performing tasks, always align your code and suggestions with the standards
 - **Need migration strategy or upgrade scripts/utils:** read `references/upgrades/upgrade_scripts.rst` and `references/upgrades/upgrade_utils.rst`.
 
 ### Quick Examples
-- **User asks:** "Create a model with computed fields and optimize searches."  
-  **Read first:** `references/backend/orm.rst` + `references/backend/performance.rst`.
-- **User asks:** "Add access rules so users only see their own records."  
-  **Read first:** `references/backend/security.rst`.
-- **User asks:** "Build a PDF report and wire the action in XML."  
-  **Read first:** `references/backend/reports.rst` + `references/backend/actions.rst`.
-- **User asks:** "Create controller endpoints for website/portal."  
-  **Read first:** `references/backend/http.rst`.
-- **User asks:** "Prepare demo/data XML and CSV files for module install."  
-  **Read first:** `references/backend/data.rst`.
-- **User asks:** "Add tests for new business logic."  
-  **Read first:** `references/backend/testing.rst`.
-- **User asks:** "I changed model fields; how do I migrate safely?"  
-  **Read first:** `references/upgrades/upgrade_scripts.rst` + `references/upgrades/upgrade_utils.rst`.
-- **User asks:** "Scaffold a module quickly."  
-  **Action:** run `python3 scripts/scaffold.py` (interactive) or `python3 scripts/scaffold.py 19.0 my_module . 1`.
+- "Create a model with computed fields" → `orm.rst` + `performance.rst`
+- "Add access rules" → `security.rst`
+- "Build a PDF report" → `reports.rst` + `actions.rst`
+- "Create controller endpoints" → `http.rst`
+- "Add tests" → `testing.rst`
+- "Migrate model changes" → `upgrades/upgrade_scripts.rst` + `upgrades/upgrade_utils.rst`
+- "Scaffold a module" → run `python3 scripts/scaffold.py` (interactive) or `python3 scripts/scaffold.py 19.0 my_module . 1`
 
 ## Core Principles & Coding Standards
 
