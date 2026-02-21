@@ -12,13 +12,10 @@ reviewable, and easy to revert.
 
 ## Local References
 
-This skill includes reference material in:
+- `references/git_guidelines.md` — header heuristic and WHY-over-WHAT philosophy
+- `references/CONTRIBUTING.md` — OCA `[MIG]` tag extension and header truncation check
 
-- `references/git_guidelines.md` (official Odoo commit message conventions)
-- `references/CONTRIBUTING.md` (OCA contribution and commit message extensions)
-
-Use these files as source context when user requests stricter validation,
-edge-case tagging decisions, or policy justification.
+Consult these only for edge-case decisions or policy justification.
 
 ## When To Use
 
@@ -31,16 +28,11 @@ Use this skill when the user asks to:
 
 ## Required Inputs
 
-Before drafting, collect:
+Collect before drafting: module name (or `various`), change intent,
+WHY rationale, and any references (`task-*`, `ticket-*`, `Fixes #`,
+`Closes #`, `opw-*`) or CI directives (`[NO CI]`).
 
-- modified module name (or `various` for cross-module commits)
-- change type and intent (bug fix, refactor, migration, etc.)
-- core rationale (WHY the change is needed)
-- notable implementation choices (only if relevant)
-- references (`task-*`, `ticket-*`, `Fixes #`, `Closes #`, `opw-*`) when available
-- specific CI directives (e.g., `[NO CI]`) if mentioned by the user
-
-If required inputs are missing, ask only the minimum concise follow-up questions.
+If inputs are missing, ask only the minimum concise follow-up questions.
 
 ## Output Format
 
@@ -61,20 +53,19 @@ opw-789
 
 Rules:
 
-- Commit message must be in English.
-- Header must start with a tag from `Tag Selection Rules` in this exact pattern: `[TAG]` (e.g., `[FIX]`, `[ADD]`).
-- The tag must be uppercase and enclosed in brackets; reject lowercase or malformed tags.
-- Keep header concise; target about 50 characters in the summary part.
-- Body must be multiline and wrapped to 72 characters per line.
-- Body should use structured plain text (lists using `*` or `-`). Avoid advanced Markdown (like tables) since commit messages are read in terminals.
-- Use imperative present voice: `Fix`, `Remove`, `Add` (not `Fixes`, `Removes`).
-- Make the header meaningful; avoid generic summaries like `bugfix`.
+- English only.
+- Header: `[TAG] module: imperative summary` (~50 chars).
+- Tag must be uppercase, bracketed, and from `Tag Selection Rules`.
+- Body wrapped at 72 chars; plain text (lists with `*`/`-`, no tables).
+- Imperative present voice: `Fix`, `Remove`, `Add` (not past/third-person).
+- Header must be meaningful — reject generic words like `bugfix`.
 - Prioritize WHY over WHAT in the body.
+- Tag must match change intent; one tag per header.
+- The header must not truncate with ellipsis in PR UI.
+- References (`task-*`, `Fixes #`, `Closes #`, `opw-*`) go at the end.
+- `[MIG]` is OCA-specific; use only when project convention supports it.
 
-Compatibility note:
-
-- Official Odoo documentation does not define `[MIG]` as a core tag.
-- `[MIG]` is the official standard for Odoo Community Association (OCA) repositories. If the repository workflow uses migration tags, `[MIG]` can be used.
+If any rule fails, rewrite the message before returning.
 
 ## Tag Selection Rules
 
@@ -108,35 +99,6 @@ Decision guidance:
 - Use technical module name, not marketing/functional display names.
 - If multiple modules are touched, list them briefly or use `various`.
 - Prefer one logical change per commit and avoid large cross-module commits.
-
-## Writing Workflow
-
-1. Identify the smallest logical change set.
-2. Choose the module scope.
-3. Select the tag from the rule set above.
-4. Draft header: `[TAG] module: imperative summary`.
-5. Draft body with WHY first, then concise WHAT if needed (plain text, wrapped at 72 chars).
-6. Add references and CI directives at the end using canonical formats.
-7. Validate against checklist before returning.
-
-## Validation Checklist
-
-Confirm all items:
-
-- Header follows `[TAG] module: summary`.
-- Header starts with exactly one valid tag from `Tag Selection Rules`.
-- Tag token is uppercase and bracketed (`[FIX]`, not `[fix]` or `FIX`).
-- Summary is concise and not truncated with ellipsis in PR UI.
-- Body lines are wrapped at max 72 characters.
-- Body formatting avoids advanced Markdown, using simple plain text.
-- Rationale (WHY) is explicit.
-- Verb tense is imperative present.
-- Tag matches change intent.
-- Module naming is technical and accurate.
-- Commit scope is a single logical change set.
-- References are formatted correctly when present.
-
-If any check fails, rewrite the message before returning.
 
 ## Good Examples
 
@@ -202,37 +164,10 @@ When asked to produce a commit message:
 
 ## Usage Examples
 
-### Scenario 1: Create a new commit message
-
-**User:** "Write an Odoo commit message for a bug fix in `sale_stock` where delivered qty was computed twice. Reference task-9123."
-
-**Agent behavior:**
-
-1. Identify tag as `[FIX]` and module as `sale_stock`.
-2. Draft concise header in imperative form.
-3. Explain WHY first in body, then concise WHAT.
-4. Append `task-9123` as reference.
-5. Suggest the commit message and ask: *"Would you like me to execute this commit for you?"*
-
-### Scenario 2: Rewrite an existing draft
-
-**User:** "Improve this commit message: `fixed stuff in stock module`"
-
-**Agent behavior:**
-
-1. Reject generic summary and missing rationale.
-2. Ask minimum questions if context is missing (what bug, why needed).
-3. Return corrected message in Odoo format.
-4. Offer to execute the commit if the user is satisfied.
-
-### Scenario 3: Validate tag choice
-
-**User:** "I changed API hooks for 19.0 migration and also fixed a small bug. Should I use `[MIG]` or `[FIX]`?"
-
-**Agent behavior:**
-
-1. Prefer `[MIG]` for migration intent.
-2. Recommend splitting migration and bug fix into separate commits when possible.
-3. Provide one valid commit message for each resulting commit if requested.
-4. Offer to stage and execute both commits sequentially.
+- **New message:** User provides module, intent, and context → draft
+  `[TAG] module: summary` with WHY body and references.
+- **Rewrite draft:** User gives a bad message like `fixed stuff` →
+  reject, ask minimum clarifying questions, return corrected version.
+- **Tag choice:** User unsure between `[MIG]` and `[FIX]` → recommend
+  based on primary intent; suggest splitting if both apply.
 
