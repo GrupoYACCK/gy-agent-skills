@@ -1,163 +1,109 @@
 ---
 name: python-pep8-coach
-description: "Review and verify Python code against PEP 8 using flake8, and optionally apply safe formatting fixes with black after explicit user confirmation. Use when users ask to check style compliance, lint Python files, or fix PEP 8 issues in a target folder."
+description: "Review and verify Python code against PEP 8 using flake8/black/pre-commit. Use when users ask to check style compliance, lint Python files, or fix PEP 8 issues."
 ---
 
 # Python PEP 8 Coach
 
 ## Purpose
 
-Use this skill to audit and improve Python style compliance with PEP 8.
+Audit and improve Python style compliance with PEP 8.
 
-Primary tools:
-
-- `flake8` for lint diagnostics
-- `black` for optional, safe automated formatting fixes
+Tools: `flake8` (diagnostics), `black` (formatting), `pre-commit` (automation).
 
 ## Local References
 
-This skill includes reference material in:
-
-- `references/pep-0008.md` (canonical PEP 8 style guide)
-
-Use this file as source context when resolving style disputes or choosing
-between strict PEP 8 and project-specific conventions.
+- `references/pep-0008.md` — condensed PEP 8 rules requiring human judgment
+  (naming, comments, programming recommendations). Consult only for
+  style disputes or edge cases not covered by tooling.
 
 ## When To Use
 
-Use this skill when the user asks to:
-
-- review Python code for PEP 8 compliance
-- identify style violations in one file or folder
-- apply style fixes while minimizing manual edits
-- standardize formatting consistently across Python files
+- Review Python code for PEP 8 compliance
+- Identify or fix style violations in files or folders
+- Set up automated style enforcement via pre-commit
 
 ## Default Behavior
 
-- Scope defaults to a user-specified folder.
-- Do not change code outside the requested path.
-- If the requested scope is repository root, confirm before scanning/editing broadly.
-- Run checks first and report findings before editing.
-- Ask for explicit confirmation before applying fixes.
-- Apply automatic fixes only when user approves.
-- Re-run format and lint checks after formatting and report remaining issues.
+- Run checks first, report findings, then ask confirmation before edits.
+- Never auto-edit without explicit user approval.
+- Never apply semantic refactors — only formatting and whitespace.
+- Exclude `.venv`, `build`, `dist`, `__pycache__` from scans.
+- If scope is repository root, confirm before scanning broadly.
+- Re-run checks after formatting and report remaining issues.
 
-Mode selection:
+## Mode Detection
 
-- Default to **strict PEP 8** unless project config or user request indicates Black.
-- Use **Black-compatible mode** when repository conventions require Black.
+Detect mode from project config (`pyproject.toml`, `setup.cfg`, `.flake8`,
+`tox.ini`, `.pre-commit-config.yaml`) or user instruction:
+
+| Mode | Line length | flake8 flags | Formatter |
+|---|---|---|---|
+| **Strict PEP 8** (default) | 79 | — | manual edits |
+| **Black-compatible** | 88 | `--extend-ignore=E203,W503` | `black` |
+| **pre-commit** | from config | from config | `pre-commit run` |
 
 ## Workflow
 
-1. Confirm target path (file or folder) from user input.
-2. Verify tool availability (`flake8 --version`, `black --version`).
-3. Detect style mode from user instruction and project config (`pyproject.toml`, `setup.cfg`, `.flake8`, `tox.ini`).
-4. Run diagnostics:
-     - Strict PEP 8 mode:
-         - `flake8 <target> --max-line-length 79 --exclude=.venv,build,dist,__pycache__`
-     - Black-compatible mode:
-         - `black --check --line-length 88 <target>`
-         - `flake8 <target> --max-line-length 88 --extend-ignore=E203,W503 --exclude=.venv,build,dist,__pycache__`
-5. Summarize results by file and error code.
-6. Ask for confirmation before edits.
-7. If approved, apply formatting:
-     - Strict PEP 8 mode: propose manual edits or minimal safe fixes (no semantic refactor).
-     - Black-compatible mode: `black --line-length 88 <target>`
-8. Re-run:
-     - Strict PEP 8 mode:
-         - `flake8 <target> --max-line-length 79 --exclude=.venv,build,dist,__pycache__`
-     - Black-compatible mode:
-         - `black --check --line-length 88 <target>`
-         - `flake8 <target> --max-line-length 88 --extend-ignore=E203,W503 --exclude=.venv,build,dist,__pycache__`
+1. Confirm target path from user input.
+2. Check for `.pre-commit-config.yaml` in the project root.
+   - **If present**: prefer `pre-commit run --files <target>` (or
+     `pre-commit run --all-files` for full repo). This respects the
+     project's configured hooks (flake8, black, isort, etc.) and avoids
+     conflicting with established team workflows.
+   - **If absent**: detect mode and run flake8/black directly.
+3. Summarize results by file and error code.
+4. Ask confirmation before edits.
+5. If approved, apply fixes (pre-commit auto-fixes, or black, or
+   manual edits depending on mode).
+6. Re-run checks and report remaining issues.
 
-## Style Policy
+## pre-commit Integration
 
-Strict PEP 8 baseline (from reference):
+When `.pre-commit-config.yaml` exists:
 
-- Code line length: 79 characters.
-- Comments/docstrings line length: 72 characters.
-- Indentation: 4 spaces (spaces preferred over tabs).
-- Use blank lines per PEP 8 conventions (2 between top-level defs, 1 between methods).
+- Use `pre-commit run --files <target>` for scoped checks.
+- Use `pre-commit run --all-files` for full repo checks.
+- Do not override hook configurations with manual flake8/black flags.
+- If pre-commit is not installed, offer: `pip install pre-commit`
+  then `pre-commit install`.
 
-Black-compatible policy (project-specific):
+When user asks to set up pre-commit for a project that lacks it:
 
-- Code line length: 88 characters.
-- Ignore `E203` and `W503` in `flake8`.
-- Use when project already standardizes on Black.
-
-## Safety Rules
-
-- Never auto-edit without explicit user confirmation.
-- Never apply semantic refactors as part of auto-fix.
-- Keep changes limited to formatting and whitespace normalization.
-- Exclude obvious non-target paths when needed (`.venv`, `build`, `dist`, caches).
-- If strict PEP 8 mode is requested, do not force Black defaults.
+- Generate a `.pre-commit-config.yaml` with standard Python hooks:
+  ```yaml
+  repos:
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v5.0.0
+      hooks:
+        - id: trailing-whitespace
+        - id: end-of-file-fixer
+    - repo: https://github.com/psf/black
+      rev: 25.1.0
+      hooks:
+        - id: black
+    - repo: https://github.com/pycqa/flake8
+      rev: 7.1.2
+      hooks:
+        - id: flake8
+    - repo: https://github.com/pycqa/isort
+      rev: 6.0.1
+      hooks:
+        - id: isort
+  ```
+- Ask confirmation before creating the file.
+- Run `pre-commit install` to enable git hooks.
 
 ## Missing Dependency Handling
 
-If `flake8` or `black` is missing:
+If a required tool is missing:
 
-1. Inform the user exactly which tool is unavailable.
-2. Ask permission to install with pip in the active environment.
-3. If user declines, provide manual install commands and stop safely.
-4. If user approves, install only the missing tool(s) and re-run diagnostics.
+1. Inform user which tool is unavailable.
+2. Ask permission to install (`pip install <tool>`).
+3. If declined, provide manual install command and stop.
 
 ## Output Expectations
 
-When reporting, provide:
-
-- analyzed scope
-- command(s) run
-- number of files checked
-- key lint categories found
-- whether fixes were applied
-- post-fix remaining issues (if any)
-
-If no violations are found, return a short success summary.
-
-## Examples
-
-### Scenario 1: Auditing a single file
-
-**User:** "Can you check `script.py` for style issues?"
-
-**Agent Reference:**
-
-1.  Check diagnostics:
-    ```bash
-    flake8 script.py --max-line-length 79
-    ```
-2.  Report: "Found 3 issues in `script.py`: E231 missing whitespace, E302 expected 2 blank lines. Would you like me to fix them?"
-3.  User: "Yes."
-4.  Apply minimal safe formatting fixes and re-run `flake8`.
-
-### Scenario 2: Black-compatible repository
-
-**User:** "Format `src/` according to our Black setup and verify lint."
-
-**Agent Reference:**
-
-1.  Check and report summary first.
-    ```bash
-    black --check --line-length 88 src/
-    flake8 src/ --max-line-length 88 --extend-ignore=E203,W503
-    ```
-2.  "Checked 12 files. Found 45 violations. Proceed with formatting?"
-3.  User: "Go ahead."
-4.  Apply fixes:
-    ```bash
-    black --line-length 88 src/
-    ```
-
-### Scenario 3: Strict PEP 8 in directory
-
-**User:** "Fix PEP 8 issues in `src/` without Black rules."
-
-**Agent Reference:**
-
-1.  Run strict diagnostics:
-    ```bash
-    flake8 src/ --max-line-length 79
-    ```
-2.  Summarize violations by file/code and ask approval.
-3.  Apply only approved, non-semantic edits and re-run strict diagnostics.
+Report: scope analyzed, command(s) run, file count, key violation
+categories, fixes applied, remaining issues. If clean, return a short
+success summary.
