@@ -160,7 +160,7 @@ When asked to produce a commit message:
 3. If user provides a draft, return a corrected Odoo-compliant version.
 4. Be strict: if the header does not begin with one uppercase bracketed tag from `Tag Selection Rules`, rewrite it before returning.
 5. For IDE Source Control usage, return a ready-to-use commit message suggestion that can be inserted directly in the Source Control commit box (no preamble, no labels, no markdown).
-6. **Execution Offer**: After providing the generated commit message, **proactively offer to execute the commit** using `git commit -m "..." -m "..."`. Always ask for explicit user confirmation before running the `git commit` command. Do not execute the commit automatically.
+6. **Execution Offer**: After providing the generated commit message, proactively offer to execute the commit on behalf of the user. Always ask for explicit user confirmation before running the commit. To execute safely, **write the full commit message to a temporary file** and run `git commit --file=<tmpfile>` (then delete the temp file). **Never interpolate user-provided text into shell command arguments** (`-m`) — this avoids shell metacharacter injection. Do not execute the commit automatically.
 
 ## Usage Examples
 
