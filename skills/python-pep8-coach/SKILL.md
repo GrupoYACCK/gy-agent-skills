@@ -1,6 +1,9 @@
 ---
 name: python-pep8-coach
 description: "Review and verify Python code against PEP 8 using flake8/black/pre-commit. Use when users ask to check style compliance, lint Python files, or fix PEP 8 issues."
+metadata: 
+  author: "Alexander Cuellar Morales"
+  version: "1.0"
 ---
 
 # Python PEP 8 Coach

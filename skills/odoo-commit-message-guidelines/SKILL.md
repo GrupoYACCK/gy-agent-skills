@@ -1,6 +1,9 @@
 ---
 name: odoo-commit-message-guidelines
 description: "Draft, rewrite, and validate Odoo-style commit messages using [TAG] module: summary format, 50/72 length limits, imperative English, WHY-first body, and correct tag selection. Includes optional migration tagging ([MIG]) when the project workflow (like OCA) uses it."
+metadata: 
+  author: "Alexander Cuellar Morales"
+  version: "1.0"
 ---
 
 # Odoo Commit Message Guidelines
