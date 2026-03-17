@@ -26,6 +26,13 @@ This repository contains specialized skills designed to extend the capabilities 
 - Designed to be interactive, asking for user confirmation before applying fixes.
 - Focuses on safety and code quality.
 
+### [Requirements AI](skills/requirements-ai/SKILL.md)
+**Description:** Structured requirements discovery skill for turning an initial product idea into a development-ready specification.
+**Key Features:**
+- Guides the user stage by stage through context, roles, features, data, business rules, and non-functional requirements.
+- Produces user stories, functional requirements, data model outlines, and technical recommendations.
+- Adapts questions based on domain context such as education, ecommerce, or AI.
+
 ## Repository Structure
 
 ```
@@ -42,10 +49,12 @@ skills/
 │   └── references/
 │       ├── CONTRIBUTING.md
 │       └── git_guidelines.md
-└── python-pep8-coach/
-    ├── SKILL.md
-    └── references/
-        └── pep-0008.md
+├── python-pep8-coach/
+│   ├── SKILL.md
+│   └── references/
+│       └── pep-0008.md
+└── requirements-ai/
+    └── SKILL.md
 ```
 
 ## Usage
