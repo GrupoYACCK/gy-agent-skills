@@ -214,8 +214,6 @@ This will replace the current content section by the Odoo home page.
 Server Actions (``ir.actions.server``)
 ======================================
 
-.. autoclass:: odoo.addons.base.models.ir_actions.IrActionsServer
-
 Allow triggering complex server code from any valid action location. Only
 two fields are relevant to clients:
 
@@ -413,8 +411,6 @@ how the POS interface works.
 Scheduled Actions (``ir.cron``)
 ===============================
 
-.. automodule:: odoo.addons.base.models.ir_cron
-
 Actions triggered automatically on a predefined frequency.
 
 ``name``
@@ -459,8 +455,6 @@ than *a few seconds*.
 Work is committed by the framework after each batch. The framework will
 call the function as many times as necessary to process the remaining work.
 Do not reschedule yourself the job.
-
-.. automethod:: IrCron._commit_progress
 
 .. code-block:: python
 
@@ -516,9 +510,6 @@ Running cron functions
 
 You should not call cron functions directly.
 There are two ways to run functions:
-
-.. automethod:: IrCron.method_direct_trigger
-.. automethod:: IrCron._trigger
 
 Testing of a cron function should be done by calling
 :func:`IrCron.method_direct_trigger` in the registry test mode.

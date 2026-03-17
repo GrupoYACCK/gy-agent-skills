@@ -1,4 +1,3 @@
-:show-content:
 
 .. _reference/orm:
 
@@ -6,12 +5,7 @@
 ORM API
 =======
 
-.. toctree::
-   :titlesonly:
-
    orm/changelog
-
-.. automodule:: odoo.models
 
 .. _reference/orm/models:
 .. _reference/orm/model:
@@ -52,9 +46,6 @@ value::
 
 .. rubric:: API
 
-.. autoclass:: odoo.models.BaseModel()
-
-    .. autoattribute:: _auto
     .. attribute:: _log_access
 
         Whether the ORM should automatically generate and update the
@@ -62,89 +53,11 @@ value::
 
         Defaults to whatever value was set for :attr:`~._auto`.
 
-    .. autoattribute:: _table
-
-    .. autoattribute:: _register
-    .. autoattribute:: _abstract
-    .. autoattribute:: _transient
-
-    .. autoattribute:: _name
-    .. autoattribute:: _description
-
-    .. autoattribute:: _inherit
-    .. autoattribute:: _inherits
-
-    .. autoattribute:: _rec_name
-    .. autoattribute:: _order
-
-    .. autoattribute:: _check_company_auto
-
-    .. autoattribute:: _parent_name
-    .. autoattribute:: _parent_store
-
-    .. autoattribute:: _fold_name
-
-AbstractModel
--------------
-
-.. autoclass:: odoo.models.AbstractModel
-
-Model
------
-
-.. autoclass:: odoo.models.Model
-
-   .. autoattribute:: _auto
-   .. autoattribute:: _abstract
-
-TransientModel
---------------
-
-.. autoclass:: odoo.models.TransientModel
-   :members: _transient_vacuum
-
-   .. autoattribute:: _transient_max_count
-   .. autoattribute:: _transient_max_hours
-
 .. _reference/fields:
 .. _reference/orm/fields:
 
 Fields
 ======
-
-.. currentmodule:: odoo.fields
-
-.. autoclass:: Field()
-
-.. _reference/fields/basic:
-
-Basic Fields
-------------
-
-.. autoclass:: Boolean()
-
-.. autoclass:: Char()
-
-.. autoclass:: Float()
-
-.. autoclass:: Integer()
-
-.. _reference/fields/advanced:
-
-Advanced Fields
----------------
-
-.. autoclass:: Binary()
-
-.. autoclass:: Html()
-
-.. autoclass:: Image()
-
-.. autoclass:: Monetary()
-
-.. autoclass:: Selection()
-
-.. autoclass:: Text()
 
 .. _reference/fields/date:
 
@@ -200,35 +113,6 @@ These helpers are also available by importing `odoo.tools.date_utils`.
     Datetime fields are stored as `timestamp without timezone` columns in the database and are stored
     in the UTC timezone. This is by design, as it makes the Odoo database independent from the timezone
     of the hosting server system. Timezone conversion is managed entirely by the client side.
-
-.. autoclass:: Date()
-    :members: today, context_today, to_date, to_string, start_of, end_of, add, subtract
-
-.. autoclass:: Datetime()
-    :members: now, today, context_timestamp, to_datetime, to_string, start_of, end_of, add, subtract
-
-.. _reference/fields/relational:
-
-Relational Fields
-~~~~~~~~~~~~~~~~~
-
-.. autoclass:: Many2one()
-
-.. autoclass:: One2many()
-
-.. autoclass:: Many2many()
-
-.. autoclass:: Command()
-   :members:
-   :undoc-members:
-   :member-order: bysource
-
-Pseudo-relational fields
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. autoclass:: Reference()
-
-.. autoclass:: Many2oneReference()
 
 .. _reference/fields/compute:
 
@@ -384,8 +268,6 @@ dependencies are modified.
       f_ids = fields.Many2many(related="m2m_ids.m2m_ids")
       g_ids = fields.One2many(related="o2m_ids.o2m_ids")
 
-.. currentmodule:: odoo.models
-
 .. _reference/fields/automatic:
 
 Automatic fields
@@ -465,9 +347,6 @@ behavior is desired:
   :class:`~odoo.fields.Boolean`
 
   Special methods:
-
-  .. automethod:: Model.action_archive
-  .. automethod:: Model.action_unarchive
 
 .. attribute:: Model.state
 
@@ -636,23 +515,12 @@ for partners and one for countries::
     records, typically in cases where the prefetching mechanism does not work
     well.
 
-
 .. _reference/api/decorators:
 
 Method decorators
 =================
 
-.. automodule:: odoo.api
-    :members: depends, depends_context, constrains, onchange, autovacuum, model, model_create_multi, private, ondelete
-
 .. .. currentmodule:: odoo.api
-
-.. .. autodata:: model
-.. .. autodata:: private
-.. .. autodata:: depends
-.. .. autodata:: constrains
-.. .. autodata:: onchange
-.. .. autodata:: autovacuum
 
 .. todo:: With sphinx 2.0 : autodecorator
 
@@ -670,10 +538,6 @@ Method decorators
 
 Environment
 ===========
-
-.. currentmodule:: odoo.api
-
-.. autoclass:: Environment
 
 .. code-block:: bash
 
@@ -699,35 +563,6 @@ other model, and query that model:
 
 Some lazy properties are available to access the environment (contextual) data:
 
-.. autoattribute:: Environment.lang
-.. autoattribute:: Environment.user
-.. autoattribute:: Environment.company
-.. autoattribute:: Environment.companies
-
-Useful environment methods
---------------------------
-
-.. automethod:: Environment.ref
-.. automethod:: Environment.is_superuser
-.. automethod:: Environment.is_admin
-.. automethod:: Environment.is_system
-.. automethod:: Environment.execute_query
-
-Altering the environment
-------------------------
-
-.. currentmodule:: odoo.models
-
-.. automethod:: Model.with_context
-
-.. automethod:: Model.with_user
-
-.. automethod:: Model.with_company
-
-.. automethod:: Model.with_env
-
-.. automethod:: Model.sudo
-
 .. _reference/orm/sql:
 
 SQL Execution
@@ -746,11 +581,6 @@ joins) or for performance reasons::
     ORM utilities if you don't really need to use SQL queries.
 
 The recommended way to build SQL queries is to use the wrapper object
-
-.. autoclass:: odoo.tools.SQL
-
-    .. automethod:: SQL.join
-    .. automethod:: SQL.identifier
 
 One important thing to know about models is that they don't necessarily perform
 database updates right away. Indeed, for performance reasons, the framework
@@ -775,12 +605,6 @@ everything, all the records of a model, or some specific records. Because
 delaying updates improves performance in general, we recommend to be *specific*
 when flushing.
 
-.. automethod:: odoo.api.Environment.flush_all
-
-.. automethod:: Model.flush_model
-
-.. automethod:: Model.flush_recordset
-
 Because models use the same cursor and the :class:`~odoo.api.Environment`
 holds various caches, these caches must be invalidated when *altering* the
 database in raw SQL, or further uses of models may become incoherent. It is
@@ -804,12 +628,6 @@ the records of a model, or the cache of specific records. One can even
 invalidate specific fields on some records or all records of a model. As the
 cache improves performance in general, we recommend to be *specific* when
 invalidating.
-
-.. automethod:: odoo.api.Environment.invalidate_all
-
-.. automethod:: Model.invalidate_model
-
-.. automethod:: Model.invalidate_recordset
 
 The methods above keep the caches and the database consistent with each other.
 However, if computed field dependencies have been modified in the database, one
@@ -840,54 +658,18 @@ without an extra query. After making the cache consistent by invalidation,
 invoke the method ``modified`` on the modified records with the fields that
 have been updated.
 
-.. automethod:: Model.modified
-
-
 .. _reference/orm/models/crud:
 
 Common ORM methods
 ==================
-
-.. currentmodule:: odoo.models
 
 Create/Update
 -------------
 
 .. todo:: api.model_create_multi information
 
-.. automethod:: Model.create
-
-.. automethod:: Model.copy
-
-.. automethod:: Model.default_get
-
-.. automethod:: Model.name_create
-
-.. automethod:: Model.write
-
 Search/Read
 -----------
-
-.. automethod:: Model.browse
-
-.. automethod:: Model.search
-
-.. automethod:: Model.search_count
-
-.. automethod:: Model.search_fetch
-
-.. automethod:: Model.name_search
-
-.. automethod:: Model.fetch
-
-.. automethod:: Model.read
-
-.. automethod:: Model._read_group
-
-Fields
-~~~~~~
-
-.. automethod:: Model.fields_get
 
 .. _reference/orm/domains:
 
@@ -1026,14 +808,6 @@ and you can negate 1 using ``'!'`` (NOT).
     # will output:
     # ['&', ('name', '=', 'abc'), ('phone', 'like', '7620')]
 
-.. automethod:: odoo.fields.Domain.iter_conditions
-
-.. automethod:: odoo.fields.Domain.map_conditions
-
-.. automethod:: odoo.fields.Domain.optimize
-
-.. automethod:: odoo.fields.Domain.validate
-
 .. _reference/orm/dynamic_values:
 
 Dynamic time values
@@ -1068,14 +842,10 @@ When setting a date, the lower-units (hours, minutes and seconds) are set to 0.
 Unlink
 ------
 
-.. automethod:: Model.unlink
-
 .. _reference/orm/records/info:
 
 Record(set) information
 -----------------------
-
-.. autoattribute:: Model.ids
 
 .. attribute:: env
 
@@ -1084,12 +854,6 @@ Record(set) information
     :type: :class:`~odoo.api.Environment`
 
 .. todo:: Environment documentation
-
-.. automethod:: Model.exists
-
-.. automethod:: Model.ensure_one
-
-.. automethod:: Model.get_metadata
 
 .. _reference/orm/records/operations:
 
@@ -1124,18 +888,6 @@ call methods on their result, or to use set operations.
 Recordsets therefore provide the following operations returning recordsets themselves
 (when possible):
 
-Filter
-~~~~~~
-
-.. automethod:: Model.filtered
-
-.. automethod:: Model.filtered_domain
-
-Map
-~~~
-
-.. automethod:: Model.mapped
-
 .. note::
 
     Since V13, multi-relational field access is supported and works like a mapped call:
@@ -1145,16 +897,6 @@ Map
         records.partner_id  # == records.mapped('partner_id')
         records.partner_id.bank_ids  # == records.mapped('partner_id.bank_ids')
         records.partner_id.mapped('name')  # == records.mapped('partner_id.name')
-
-Sort
-~~~~
-
-.. automethod:: Model.sorted
-
-Grouping
-~~~~~~~~
-
-.. automethod:: Model.grouped
 
 .. _reference/orm/inheritance:
 
@@ -1168,9 +910,6 @@ Odoo provides three different mechanisms to extend models in a modular way:
 * extending models defined in other modules in-place, replacing the previous
   version
 * delegating some of the model's fields to records it contains
-
-.. image:: orm/inheritance_methods.png
-    :align: center
 
 Classical inheritance
 ---------------------
@@ -1331,7 +1070,6 @@ and it's possible to write directly on the delegated field::
     * `_inherits` is more or less implemented, avoid it if you can;
     * chained `_inherits` is essentially not implemented, we cannot guarantee anything on the final behavior.
 
-
 Fields Incremental Definition
 -----------------------------
 
@@ -1362,6 +1100,3 @@ For instance, the second class below only adds a tooltip on the field
 
 Error management
 ================
-
-.. automodule:: odoo.exceptions
-    :members: AccessDenied, AccessError, CacheMiss, MissingError, RedirectWarning, UserError, ValidationError

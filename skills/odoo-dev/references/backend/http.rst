@@ -51,39 +51,6 @@ class and override relevant methods, re-exposing them if necessary::
 API
 ===
 
-.. _reference/http/routing:
-
-Routing
--------
-
-.. autodecorator:: odoo.http.route
-
-.. _reference/http/request:
-
-Request
--------
-
-The request object is automatically set on :data:`odoo.http.request` at
-the start of the request.
-
-.. autoclass:: odoo.http.Request
-    :members:
-    :member-order: bysource
-
-.. autoclass:: odoo.http.JsonRPCDispatcher
-    :members:
-    :member-order: bysource
-.. autoclass:: odoo.http.HttpDispatcher
-    :members:
-    :member-order: bysource
-
-Response
---------
-
-.. autoclass:: odoo.http.Response
-    :members:
-    :member-order: bysource
-
-    .. maybe set this to document all the fine methods on Werkzeug's Response
-       object? (it works)
-       :inherited-members:
+Key classes: ``odoo.http.route`` (decorator), ``odoo.http.Request`` (auto-set on ``odoo.http.request``),
+``odoo.http.Response``, ``odoo.http.JsonRPCDispatcher``, ``odoo.http.HttpDispatcher``.
+See Odoo source for full API details.
