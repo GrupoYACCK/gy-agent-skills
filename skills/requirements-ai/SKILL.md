@@ -1,6 +1,6 @@
 ---
 name: requirements-ai
-description: Use when users ask to define, clarify, or document software requirements. Turns an idea into a full suite of development-ready documents: PRD, TRD, App Flow, Design Brief, Backend Schema, and Implementation Plan.
+description: "Use when users ask to define, clarify, or document software requirements. Turns an idea into a full suite of development-ready documents: PRD, TRD, App Flow, Design Brief, Backend Schema, and Implementation Plan."
 ---
 
 # Requirements AI
