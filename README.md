@@ -8,6 +8,7 @@ This repository contains specialized skills designed to extend the capabilities 
 **Description:** Senior Odoo developer skill focused on Odoo/OCA standards, secure code patterns, and module scaffolding workflows.
 **Key Features:**
 - Enforces Odoo and OCA coding/contribution guidelines from local references.
+- Records Odoo 19 deltas (list views, `models.Constraint`, sale-line SQL, computed fiscal position) and the OCA connector, queue job, and CI checks.
 - Reviews code for common framework risks (SQL injection patterns, unsafe commits, fragile XML inheritance).
 - Supports module scaffolding with `scripts/scaffold.py` in interactive mode or positional-argument mode.
 - Includes script usage documentation in `skills/odoo-dev/scripts/README.md`.
