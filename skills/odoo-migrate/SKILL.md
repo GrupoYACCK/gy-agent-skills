@@ -38,6 +38,7 @@ Each URL below documents what must change when migrating **to** that version:
 | 17.0 | https://github.com/OCA/maintainer-tools/wiki/Migration-to-version-17.0 |
 | 18.0 | https://github.com/OCA/maintainer-tools/wiki/Migration-to-version-18.0 |
 | 19.0 | https://github.com/OCA/maintainer-tools/wiki/Migration-to-version-19.0 |
+| 20.0 | https://github.com/OCA/maintainer-tools/wiki/Migration-to-version-20.0 |
 
 ## Step 1 — Identify the module
 
